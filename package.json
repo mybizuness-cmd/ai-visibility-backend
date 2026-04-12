@@ -5,6 +5,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/app.js",
+    "api:start": "node dist/app.js",
     "db:init": "node dist/db/init.js"
   },
   "dependencies": {
