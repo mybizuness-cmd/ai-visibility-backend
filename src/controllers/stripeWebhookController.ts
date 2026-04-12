@@ -53,6 +53,39 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
           paymentStatus,
         ]
       );
+      await pool.query(
+  `
+  INSERT INTO payments (
+    stripe_session_id,
+    customer_email,
+    amount_total,
+    currency,
+    payment_status
+  )
+  VALUES ($1, $2, $3, $4, $5)
+  ON CONFLICT (stripe_session_id) DO NOTHING
+  `,
+  [
+    stripeSessionId,
+    customerEmail,
+    amountTotal,
+    currency,
+    paymentStatus,
+  ]
+);
+
+await pool.query(
+  `
+  INSERT INTO users (email, is_paid)
+  VALUES ($1, true)
+  ON CONFLICT (email)
+  DO UPDATE SET is_paid = true
+  `,
+  [customerEmail]
+);
+
+console.log("Payment saved:", stripeSessionId);
+
 
       console.log("Payment saved:", stripeSessionId);
     }
