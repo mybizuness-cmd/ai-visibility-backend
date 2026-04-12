@@ -1,6 +1,5 @@
 import express from "express";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 import { stripeWebhookHandler } from "./controllers/stripeWebhookController";
 import { testConnection } from "./db/client";
 
@@ -8,12 +7,14 @@ dotenv.config();
 
 const app = express();
 
-app.post('/api/stripe/webhook', stripeWebhookController);
-
-
+// Stripe webhook must use raw body FIRST
 app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
+app.post('/api/stripe/webhook', stripeWebhookHandler);
 
-app.get("/api/health", async (req, res) => {
+// Normal JSON parsing only AFTER webhook setup
+app.use(express.json());
+
+app.get('/api/health', async (req, res) => {
   try {
     await testConnection();
     res.json({ ok: true, status: "healthy" });
