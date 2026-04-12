@@ -8,9 +8,10 @@ dotenv.config();
 
 const app = express();
 
-app.post("/api/stripe/webhook", bodyParser.raw({ type: "application/json" }), stripeWebhookHandler);
+app.post('/api/stripe/webhook', stripeWebhookController);
 
-app.use(express.json());
+
+app.use('/api/stripe/webhook', express.raw({ type: 'application/json' }));
 
 app.get("/api/health", async (req, res) => {
   try {
