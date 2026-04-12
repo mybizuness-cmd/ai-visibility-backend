@@ -63,3 +63,12 @@ export const stripeWebhookHandler = async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Webhook processing failed" });
   }
 };
+await pool.query(
+  `
+  INSERT INTO users (email, is_paid)
+  VALUES ($1, true)
+  ON CONFLICT (email)
+  DO UPDATE SET is_paid = true
+  `,
+  [customerEmail]
+);
