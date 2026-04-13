@@ -2,7 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import pool from "./db/client";
 import { stripeWebhookHandler } from "./controllers/stripeWebhookController";
-import { createCheckoutSession } from "./controllers/checkoutControllers";
+import { createCheckoutSession } from "./controllers/checkoutController";
 import { testConnection } from "./db/client";
 
 dotenv.config();
