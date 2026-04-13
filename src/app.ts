@@ -2,6 +2,7 @@ import express from "express";
 import dotenv from "dotenv";
 import pool from "./db/client";
 import { stripeWebhookHandler } from "./controllers/stripeWebhookController";
+import { createCheckoutSession } from "./controllers/checkoutControllers';
 import { testConnection } from "./db/client";
 
 dotenv.config();
@@ -14,6 +15,7 @@ app.post('/api/stripe/webhook', stripeWebhookHandler);
 
 // Normal JSON parsing only AFTER webhook setup
 app.use(express.json());
+app.post("/api/create-checkout-session", createCheckoutSession);
 
 app.get('/api/health', async (req, res) => {
   try {
